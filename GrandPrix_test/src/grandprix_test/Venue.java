@@ -57,6 +57,6 @@ public class Venue {
     
     @Override
     public String toString() {
-        return "Venue name: " + this.venueName + "\n Average Lap Time: " + "\n Number of Laps: " + this.numberOfLaps + this.averageLapTime +  "\n Chance of Rain: " + this.chanceOfRain + "\n\n";
+        return "Venue name: " + this.venueName + "\n Average Lap Time: " + this.averageLapTime + "\n Number of Laps: " + this.numberOfLaps +  "\n Chance of Rain: " + this.chanceOfRain + "\n\n";
     }
 }

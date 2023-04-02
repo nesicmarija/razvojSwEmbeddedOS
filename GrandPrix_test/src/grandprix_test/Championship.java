@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 /**
@@ -20,6 +21,10 @@ public class Championship {
     private final int MINOR_MECHANICAL_FAULT = 5;
     private final int MAJOR_MECHANICAL_FAULT = 3;
     private final int UNRECOVERABLE_MECHANICAL_FAULT = 1;
+    final int FRONT_ROW_DELAY = 3;
+    final int SECOND_ROW_DELAY = 5;
+    final int THIRD_ROW_DELAY = 7;
+    final int LOWER_HALF_OF_THE_FIELD_DELAY = 10;
 
     public Championship(String driversFilePath, String venuesFilePath) throws FileNotFoundException {
         this.drivers = new ArrayList<>();
@@ -43,12 +48,33 @@ public class Championship {
         
         // add the new Venue object to the venues ArrayList
             venues.add(venue);
-            System.out.println(venue);
+           // System.out.println(venue);
         }
         reader.close();
     } catch (IOException e) {
         System.out.println("Error reading venues file: " + e.getMessage());
     }
+        
+      try {
+            BufferedReader reader = new BufferedReader(new FileReader(driversFilePath));
+            String line;
+        while ((line = reader.readLine()) != null) {
+            // split the line into an array of values
+            String[] values = line.split(",");
+            
+        // create a new Diver object based on the values
+            Driver driver = new Driver( values[0],Integer.parseInt(values[1]), values[2]);
+        
+        // add the new Driver object to the venues ArrayList
+            drivers.add(driver);
+          //  System.out.println(driver);
+        }
+        reader.close();
+    } catch (IOException e) {
+        System.out.println("Error reading driver file: " + e.getMessage());
+    }    
+        
+        
 
 }
 
@@ -79,7 +105,32 @@ public class Championship {
     public int getUNRECOVERABLE_MECHANICAL_FAULT() {
         return UNRECOVERABLE_MECHANICAL_FAULT;
     }
+    
+    public String printDrivers() {
+        String s = new String();
+        for(Driver d : drivers) {
+        s = s + "Name: " + d.getName() + "\nSpecial skill: " + d.getSpecialSkill() +
+                "\nAccumulated time: " + d.getAccumulatedTime() +  "\nAccumulated points: " + d.getAccumulatedPoints()+"\n Ranking: " + d.getRanking()+"\n\n";
+        }
+        return s;
+    }
+    
+    public void prepareForTheRace(){
+        
+                Collections.sort(this.drivers, new DriverRankingComparator(1));
+                if(this.drivers.get(1).isEligibleToRace())
+                    this.drivers.get(1).setAccumulatedTime(this.drivers.get(1).getAccumulatedTime() + FRONT_ROW_DELAY);
+                   
+                if(this.drivers.get(2).isEligibleToRace())
+                    this.drivers.get(2).setAccumulatedTime(this.drivers.get(2).getAccumulatedTime() + SECOND_ROW_DELAY);
+                  
+                if(this.drivers.get(3).isEligibleToRace())
+                    this.drivers.get(3).setAccumulatedTime(this.drivers.get(3).getAccumulatedTime() + THIRD_ROW_DELAY);
+                for (int i = 4; i < drivers.size(); i++) {
+                    if(this.drivers.get(i).isEligibleToRace())
+                        this.drivers.get(i).setAccumulatedTime(this.drivers.get(i).getAccumulatedTime() + LOWER_HALF_OF_THE_FIELD_DELAY);
+                }
 
-
+    }
 
 }
