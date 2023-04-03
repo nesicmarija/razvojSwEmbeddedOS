@@ -25,13 +25,19 @@ public class GrandPrix_test {
         // Pitaj za broj trka
         int numRaces = 0;
         while (numRaces < 3 || numRaces > 5) {
-            System.out.print("Unesite broj trka u sezoni (3-5): ");
+            System.out.print("Enter the number of races in the season (3-5): ");
             numRaces = scanner.nextInt();
         }
         
-        for(int noOfRaces = 0; noOfRaces < numRaces; noOfRaces++){
+        championship.prepareForTheRace(); 
+        Collections.sort(championship.getDrivers(), new DriverPointsComparator(1));
+        System.out.println("And this are this season's starting positions:");
+        for(int j = 0; j < championship.getDrivers().size(); j++){
+            System.out.println((j+1) + "." + championship.getDrivers().get(j).getName() + " " +championship.getDrivers().get(j).getRanking());
+        }
             
-       
+        for(int noOfRaces = 0; noOfRaces < numRaces; noOfRaces++){
+              
             System.out.println("Available venues:");
             for (int i = 0; i < championship.getVenues().size(); i++) {
                 System.out.println((i+1) + ". " + championship.getVenues().get(i).getVenueName());
@@ -41,38 +47,34 @@ public class GrandPrix_test {
             int venueNumber = scanner.nextInt();
         
             Venue selectedVenue = championship.getVenues().get(venueNumber - 1);
-
-            System.out.println("Izabrali ste venue: " + championship.getVenues().get(venueNumber - 1).getVenueName());  
-            System.out.println("Sa brojem krugova: " + championship.getVenues().get(venueNumber - 1).getNumberOfLaps());  
-            
+            int selectedVenueNoOfLaps = selectedVenue.numberOfLaps;
             int index = championship.getVenues().indexOf(selectedVenue);
-            System.out.println(index);
-
-            int noOfLaps = championship.getVenues().get(index).numberOfLaps;
-            System.out.println("Broj krugova: " + noOfLaps);
+             
+            System.out.println("Chosen venue is: " + selectedVenue.getVenueName());  
+            System.out.println("And how many laps does it have ?: " + "It has " + selectedVenueNoOfLaps + " laps");  
+            
+              for(int noOfLaps = 0; noOfLaps < selectedVenueNoOfLaps; noOfLaps++){
+                championship.driveAverageLapTime(index);
+                System.out.println("Add " + championship.getVenues().get(index).getAverageLapTime() + " to all drivers");
+                championship.printLeader(noOfLaps);
+                
+                
+            }
+              String venueName = championship.getVenues().get(index).getVenueName();
+              championship.printWinnersAfterRace(venueName);
+              
             // If the selected venue was found in the list, remove it
             if (index >= 0) {
                 championship.getVenues().remove(selectedVenue);
             }
+            
+
+            
         
-               /*  System.out.println("Available venues:");
-            for (int i = 0; i < championship.getVenues().size(); i++) { 
-                System.out.println((i+1) + ". " + championship.getVenues().get(i).getVenueName());
-            }
-        */
-            System.out.println(noOfLaps);
             
-            for(int i = 0; i < noOfLaps; i++ ){
-                System.out.println(i);
-                
-                championship.prepareForTheRace(); //azuriramo nakon svake trke
-                Collections.sort(championship.getDrivers(), new DriverPointsComparator(1));
-                System.out.println("Starting positions:");
-                for(int j = 0; j < championship.getDrivers().size(); j++){
-                    System.out.println((j+1) + "." + championship.getDrivers().get(j).getName() + " " +championship.getDrivers().get(j).getRanking());
-                }
+     
             
-            }
+            
             
             
         }

@@ -25,6 +25,8 @@ public class Championship {
     final int SECOND_ROW_DELAY = 5;
     final int THIRD_ROW_DELAY = 7;
     final int LOWER_HALF_OF_THE_FIELD_DELAY = 10;
+    final int MINOR_REPARE_TIME = 20;
+    final int MAJOR_REPARE_TIME = 120;
 
     public Championship(String driversFilePath, String venuesFilePath) throws FileNotFoundException {
         this.drivers = new ArrayList<>();
@@ -118,12 +120,11 @@ public class Championship {
     public void prepareForTheRace(){
         
                 Collections.sort(this.drivers, new DriverRankingComparator(1));
+                if(this.drivers.get(0).isEligibleToRace())
                 if(this.drivers.get(1).isEligibleToRace())
                     this.drivers.get(1).setAccumulatedTime(this.drivers.get(1).getAccumulatedTime() + FRONT_ROW_DELAY);
-                   
                 if(this.drivers.get(2).isEligibleToRace())
                     this.drivers.get(2).setAccumulatedTime(this.drivers.get(2).getAccumulatedTime() + SECOND_ROW_DELAY);
-                  
                 if(this.drivers.get(3).isEligibleToRace())
                     this.drivers.get(3).setAccumulatedTime(this.drivers.get(3).getAccumulatedTime() + THIRD_ROW_DELAY);
                 for (int i = 4; i < drivers.size(); i++) {
@@ -132,5 +133,53 @@ public class Championship {
                 }
 
     }
+    
+    void driveAverageLapTime(int i){
+        for (Driver driver : drivers) {
+           if(driver.isEligibleToRace())
+           driver.setAccumulatedTime(driver.getAccumulatedTime() +   this.venues.get(i).getAverageLapTime());
+       }
+    }
+    
+    void applySpecialSkills(int lapNo){
+        for (Driver driver : drivers) {
+           if(driver.isEligibleToRace())
+               driver.useSpecialSkill(lapNo);
+       }
+    }
+  
+    void checkMechanicalProblem(){
+        int probability = RNG.getRandomValue(0, 99);
+        for (Driver driver : drivers) {
+            if(probability < 5){
+                driver.setAccumulatedTime(driver.getAccumulatedTime() + MINOR_REPARE_TIME);
+            }
+            if(probability < 3){
+                driver.setAccumulatedTime(driver.getAccumulatedTime() + MAJOR_REPARE_TIME);
+            }
+            if(probability < 1){
+                driver.setEligibleToRace(false);
+            }
+        }
+    }
 
+    void printLeader(int lap){
+         System.out.println(this.drivers.get(0).getName() +  "is first place after " + lap + " lap");
+    }
+    
+    void printWinnersAfterRace(String venueName){
+        System.out.println("First round over!  ");
+        System.out.println("Let's see the stats after " + venueName);
+        System.out.println(this.drivers.get(0).getName() +  "is first place in this round");
+        System.out.println(this.drivers.get(1).getName() +  "is second place in this round");
+        System.out.println(this.drivers.get(2).getName() +  "is third place in this round");
+        System.out.println(this.drivers.get(0).getName() +  "is forth place in this round");
+    }
+    
+     void printChampion(int numOfRaces){
+         
+     }
+
+    
+    
 }

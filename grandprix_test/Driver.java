@@ -92,20 +92,24 @@ public class Driver implements Comparable<Driver>{
         this.rainTires = rainTires;
     }
     
-    public void useSpecialSkill()
+    public void useSpecialSkill(int lapNo)
     {
         int bonusTime = 0;
         
         if(this.specialSkill.equals("Cornening")){
             bonusTime = RNG.getRandomValue(CORNERING_L, CORNERING_H);
+             System.out.println(this.name + " used Cornering!");
         }
         
         if(this.specialSkill.equals("Breaking")){
             bonusTime = RNG.getRandomValue(BREAKING_L, BREAKING_H);
+            System.out.println(this.name + " used Breaking!");
         }
         
         if(this.specialSkill.equals("Overtaking")){
+            if(lapNo % 3 == 2)
             bonusTime = RNG.getRandomValue(OVERTAKING_L, OVERTAKING_H);
+            System.out.println(this.name + " used Overtaking!");
         }
         
         this.accumulatedTime -= bonusTime;
