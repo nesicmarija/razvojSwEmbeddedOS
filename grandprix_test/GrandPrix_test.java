@@ -30,7 +30,7 @@ public class GrandPrix_test {
         }
         
         championship.prepareForTheRace(); 
-        Collections.sort(championship.getDrivers(), new DriverPointsComparator(1));
+       // Collections.sort(championship.getDrivers(), new DriverPointsComparator(1));
         System.out.println("And this are this season's starting positions:");
         for(int j = 0; j < championship.getDrivers().size(); j++){
             System.out.println((j+1) + "." + championship.getDrivers().get(j).getName() + " " +championship.getDrivers().get(j).getRanking());
@@ -56,7 +56,16 @@ public class GrandPrix_test {
               for(int noOfLaps = 0; noOfLaps < selectedVenueNoOfLaps; noOfLaps++){
                 championship.driveAverageLapTime(index);
                 System.out.println("Add " + championship.getVenues().get(index).getAverageLapTime() + " to all drivers");
+                
+                championship.applySpecialSkills(noOfLaps);
+                
+                championship.checkMechanicalProblem();
+                
                 championship.printLeader(noOfLaps);
+                
+                  System.out.println("CHECK TIME");
+                    System.out.println("print everything " + championship.printDrivers());
+                
                 
                 
             }
