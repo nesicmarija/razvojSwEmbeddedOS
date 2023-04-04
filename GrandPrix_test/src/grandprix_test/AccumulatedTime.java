@@ -18,8 +18,14 @@ public class AccumulatedTime implements Comparator<Driver>{
 		}
 		this.dir = dir;
     }
+    
     @Override
     public int compare(Driver d1, Driver d2) {
-        return dir*Integer.compare(d1.getAccumulatedTime(), d2.getAccumulatedTime());
+        int result = Integer.compare(d1.getAccumulatedTime(), d2.getAccumulatedTime());
+            if (result ==0){
+                int random = RNG.getRandomValue(0, 1);
+                return (random == 0) ? -1 : 1;
+            }
+        return dir * result;
 	}
 }

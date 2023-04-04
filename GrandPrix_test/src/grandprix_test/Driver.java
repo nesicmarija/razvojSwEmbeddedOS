@@ -98,18 +98,18 @@ public class Driver implements Comparable<Driver>{
         
         if(this.specialSkill.equals("Cornering")){
             bonusTime = RNG.getRandomValue(CORNERING_L, CORNERING_H);
-             System.out.println(this.name + " used Cornering!" + bonusTime);
+             System.out.println(this.name + " used Cornering! " + bonusTime);
         }
         
         if(this.specialSkill.equals("Braking")){
             bonusTime = RNG.getRandomValue(BREAKING_L, BREAKING_H);
-            System.out.println(this.name + " used Breaking!" + bonusTime);
+            System.out.println(this.name + " used Breaking! " + bonusTime);
         }
         
         if(this.specialSkill.equals("Overtaking")){
             if(lapNo % 3 == 2){
                 bonusTime = RNG.getRandomValue(OVERTAKING_L, OVERTAKING_H);
-                System.out.println(this.name + " used Overtaking!" + bonusTime);
+                System.out.println(this.name + " used Overtaking! " + bonusTime);
             }
         }
         

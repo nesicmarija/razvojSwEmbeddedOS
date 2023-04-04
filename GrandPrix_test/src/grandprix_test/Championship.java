@@ -146,6 +146,7 @@ public class Championship {
     }
     
     void resetAfterVenue(){
+        System.out.println("reset");
          for(int i = 0; i < this.getDrivers().size(); i++){
                 this.getDrivers().get(i).setEligibleToRace(true);
                 this.getDrivers().get(i).setAccumulatedTime(0);
@@ -157,7 +158,8 @@ public class Championship {
      
         for (Driver driver : drivers) {
             int probability = RNG.getRandomValue(0, 99);
-            System.out.println(probability);
+           //int probability = 9;
+            System.out.println("Random number for probability for mechanical problem: " + probability);
             if(driver.isEligibleToRace()){
                 if(probability < 5){
                     driver.setAccumulatedTime(driver.getAccumulatedTime() + MINOR_REPARE_TIME);
@@ -186,11 +188,11 @@ public class Championship {
     void rainCheck(){
         for (Driver driver : drivers) {
             int probability = RNG.getRandomValue(0, 99);
-            System.out.println(probability);
+            System.out.println("Eandom number for rain probability: " + probability);
             if(driver.isEligibleToRace()){
                 if(probability < 51){
                     driver.setRainTires(true);
-                    System.out.println("Diver " + driver.getName() + " changed tires for rain");
+                    System.out.println("Driver " + driver.getName() + " changed tires for rain");
                      driver.setAccumulatedTime(driver.getAccumulatedTime() + RAIN_CHANGE_DELAY);                   
                 }
             }
@@ -201,13 +203,14 @@ public class Championship {
         double chanceOfRain = this.venues.get(venue).getChanceOfRain();
         System.out.println(chanceOfRain);
         int probability = RNG.getRandomValue(0, 99);
+        //int probability = 1;
         double chanceOfRaining = chanceOfRain * 100; 
         System.out.println(probability);
         if(probability < chanceOfRaining){
             for (Driver driver : drivers){            
                 if(driver.isEligibleToRace()){
                     if(driver.getRainTires() == false){
-                        System.out.println("Driver " + driver.getName() + "doesn't have tires for rain!");
+                        System.out.println("Driver " + driver.getName() + " doesn't have tires for rain!");
                         driver.setAccumulatedTime(driver.getAccumulatedTime() + RAIN_DELAY);  
                     }
                                      
@@ -223,12 +226,12 @@ public class Championship {
          
     
     void printWinnersAfterRace(String venueName){
-        System.out.println("Round over!  ");
+        System.out.println("Race over!  ");
         System.out.println("Let's see the stats after " + venueName);
-        System.out.println(this.drivers.get(0).getName() +  "is first place in this round");
-        System.out.println(this.drivers.get(1).getName() +  "is second place in this round");
-        System.out.println(this.drivers.get(2).getName() +  "is third place in this round");
-        System.out.println(this.drivers.get(3).getName() +  "is forth place in this round");
+        System.out.println(this.drivers.get(0).getName() +  " is first place in this round");
+        System.out.println(this.drivers.get(1).getName() +  " is second place in this round");
+        System.out.println(this.drivers.get(2).getName() +  " is third place in this round");
+        System.out.println(this.drivers.get(3).getName() +  " is fourth place in this round");
     }
     
     void rewardingDrivers(){
@@ -259,9 +262,6 @@ public class Championship {
         }
     }
      void printChampion(int numOfRaces){
-         System.out.println("And after " + numOfRaces + "races" +  " \n CHAMPION IS " + this.drivers.get(0).getName() + " ,congratulations!!!! *_*)");
-     }
-
-    
-    
+         System.out.println("And after " + numOfRaces + " races " +  " \n CHAMPION IS " + this.drivers.get(0).getName() + " ,congratulations!!!! *_*)");
+     }   
 }

@@ -5,8 +5,11 @@
         <group>
             <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/Championship.java</file>
             <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/GrandPrix_test.java</file>
+            <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/AccumulatedTime.java</file>
             <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/Venue.java</file>
             <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/Driver.java</file>
+            <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/RNG.java</file>
+            <file>file:/C:/Users/marija/Documents/NetBeansProjects/GrandPrix_test/src/grandprix_test/DriverRankingComparator.java</file>
         </group>
     </open-files>
 </project-private>
