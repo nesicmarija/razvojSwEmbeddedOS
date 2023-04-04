@@ -84,7 +84,7 @@ public class Driver implements Comparable<Driver>{
         this.accumulatedPoints = accumulatedPoints;
     }
 
-    public boolean isRainTires() {
+    public boolean getRainTires() {
         return rainTires;
     }
 

@@ -30,6 +30,9 @@ public class GrandPrix_test {
         }
         
         championship.prepareForTheRace(); 
+        System.out.println("CHECK TIME");
+        System.out.println("print everything " + championship.printDrivers());
+                    
        // Collections.sort(championship.getDrivers(), new DriverPointsComparator(1));
         System.out.println("And this are this season's starting positions:");
         for(int j = 0; j < championship.getDrivers().size(); j++){
@@ -58,16 +61,22 @@ public class GrandPrix_test {
                 System.out.println("Add " + championship.getVenues().get(index).getAverageLapTime() + " to all drivers");
                 
                 championship.applySpecialSkills(noOfLaps);
-                
+                    
                 championship.checkMechanicalProblem();
                 
-                championship.printLeader(noOfLaps);
+                if(noOfLaps == 1){
+                    championship.rainCheck();
+                }
                 
-                  System.out.println("CHECK TIME");
+                championship.rainProblem(index);
+                
+                    
+                championship.rewardingDrivers();
+                
+                System.out.println("CHECK TIME");
                     System.out.println("print everything " + championship.printDrivers());
-                
-                
-                
+                    
+                championship.printLeader(noOfLaps);
             }
               String venueName = championship.getVenues().get(index).getVenueName();
               championship.printWinnersAfterRace(venueName);
@@ -77,18 +86,11 @@ public class GrandPrix_test {
                 championship.getVenues().remove(selectedVenue);
             }
             
-
-            
-        
-            
-     
-            
-            
-            
-            
+            championship.resetAfterVenue();
         }
+        
+            championship.printChampion(numRaces);
             
-
     }
     
 }

@@ -27,11 +27,9 @@ public class Championship {
     final int LOWER_HALF_OF_THE_FIELD_DELAY = 10;
     final int MINOR_REPARE_TIME = 20;
     final int MAJOR_REPARE_TIME = 120;
-    final int FIRST_PLACE_REWARD = 8;
-    final int SECOND_PLACE_REWARD = 5;
-    final int THIRD_PLACE_REWARD = 5;
-    final int FOURTH_PLACE_REWARD = 1;
-
+    final int RAIN_CHANGE_DELAY = 10;
+    final int RAIN_DELAY = 5;
+    
     public Championship(String driversFilePath, String venuesFilePath) throws FileNotFoundException {
         this.drivers = new ArrayList<>();
         this.venues = new ArrayList<>();
@@ -73,9 +71,6 @@ public class Championship {
         } catch (IOException e) {
             System.out.println("Error reading driver file: " + e.getMessage());
         }    
-        
-        
-
     }
 
     public ArrayList<Driver> getDrivers() {
@@ -108,15 +103,20 @@ public class Championship {
     
     public String printDrivers() {
         String s = new String();
-        for(Driver d : drivers) {
-        s = s + "Name: " + d.getName() + "\nSpecial skill: " + d.getSpecialSkill() +
-                "\nAccumulated time: " + d.getAccumulatedTime() +  "\nAccumulated points: " + d.getAccumulatedPoints()+"\n Ranking: " + d.getRanking()+"\n\n";
+        for(int i = 0; i < this.drivers.size(); i++) {
+            Collections.sort(this.drivers, new DriverPointsComparator(-1));
+            this.drivers.get(i).setRanking(i + 1); 
+            if(this.drivers.get(i).isEligibleToRace()){
+                s = s + "Name: " + this.drivers.get(i).getName() + "\nSpecial skill: " +  this.drivers.get(i).getSpecialSkill() +
+                "\nAccumulated time: " +  this.drivers.get(i).getAccumulatedTime() +  "\nAccumulated points: " +  this.drivers.get(i).getAccumulatedPoints()+"\n Ranking: " +  this.drivers.get(i).getRanking()+"\n\n";
+            }    
         }
         return s;
     }
     
     public void prepareForTheRace(){
         
+
         Collections.sort(this.drivers, new DriverRankingComparator(1));
          
         if(this.drivers.get(1).isEligibleToRace())
@@ -144,63 +144,122 @@ public class Championship {
                driver.useSpecialSkill(lapNo);
        }
     }
+    
+    void resetAfterVenue(){
+         for(int i = 0; i < this.getDrivers().size(); i++){
+                this.getDrivers().get(i).setEligibleToRace(true);
+                this.getDrivers().get(i).setAccumulatedTime(0);
+                this.getDrivers().get(i).setRainTires(false);
+            }
+    }
   
     void checkMechanicalProblem(){
      
         for (Driver driver : drivers) {
             int probability = RNG.getRandomValue(0, 99);
             System.out.println(probability);
-            
-            if(probability < 5){
-                driver.setAccumulatedTime(driver.getAccumulatedTime() + MINOR_REPARE_TIME);
-                System.out.println(driver.getName() + "has minor mechanical fault");
+            if(driver.isEligibleToRace()){
+                if(probability < 5){
+                    driver.setAccumulatedTime(driver.getAccumulatedTime() + MINOR_REPARE_TIME);
+                    System.out.println(driver.getName() + " has experienced minor mechanical fault");
+            }
             }
             
-            if(probability > 4 && probability < 8){
-                driver.setAccumulatedTime(driver.getAccumulatedTime() + MAJOR_REPARE_TIME);
-                System.out.println(driver.getName() + "has minor mechanical fault");
+            if(driver.isEligibleToRace()){
+                if(probability > 4 && probability < 8){
+                    driver.setAccumulatedTime(driver.getAccumulatedTime() + MAJOR_REPARE_TIME);
+                    System.out.println(driver.getName() + " has experienced a major mechanical fault");
+                }
             }
             
-            if(probability == 9){
-                driver.setEligibleToRace(false);
-                System.out.println(driver.getName() + "HAS EXPERIENCED AN IRREPARABLE MECHANICAL FAILURE");
-                System.out.println("It's a shame, let's root for him in the future, thanks for the race" + driver.getName());
+            if(driver.isEligibleToRace()){
+                if(probability == 9){
+                    driver.setEligibleToRace(false);
+                    System.out.println(driver.getName() + " HAS EXPERIENCED AN IRREPARABLE MECHANICAL FAILURE");
+                    System.out.println("See you for the next venue " + driver.getName() + "!");
+            }
             }
             
         }
     }
-
-    void printLeader(int lap){
-         Collections.sort(this.drivers, new AccumulatedTime(1));
-         System.out.println(this.drivers.get(0).getName() +  "is first place after " + lap + " lap");
+    
+    void rainCheck(){
+        for (Driver driver : drivers) {
+            int probability = RNG.getRandomValue(0, 99);
+            System.out.println(probability);
+            if(driver.isEligibleToRace()){
+                if(probability < 51){
+                    driver.setRainTires(true);
+                    System.out.println("Diver " + driver.getName() + " changed tires for rain");
+                     driver.setAccumulatedTime(driver.getAccumulatedTime() + RAIN_CHANGE_DELAY);                   
+                }
+            }
+        }
     }
     
+    void rainProblem(int venue){
+        double chanceOfRain = this.venues.get(venue).getChanceOfRain();
+        System.out.println(chanceOfRain);
+        int probability = RNG.getRandomValue(0, 99);
+        double chanceOfRaining = chanceOfRain * 100; 
+        System.out.println(probability);
+        if(probability < chanceOfRaining){
+            for (Driver driver : drivers){            
+                if(driver.isEligibleToRace()){
+                    if(driver.getRainTires() == false){
+                        System.out.println("Driver " + driver.getName() + "doesn't have tires for rain!");
+                        driver.setAccumulatedTime(driver.getAccumulatedTime() + RAIN_DELAY);  
+                    }
+                                     
+                }
+            }
+        }
+    }
+
+    void printLeader(int lap){
+             System.out.println(this.drivers.get(0).getName() +  "is first place after " + (lap + 1) + ". lap");
+    }
+         
+         
+    
     void printWinnersAfterRace(String venueName){
-        Collections.sort(this.drivers, new AccumulatedTime(1));
-        System.out.println("First round over!  ");
+        System.out.println("Round over!  ");
         System.out.println("Let's see the stats after " + venueName);
         System.out.println(this.drivers.get(0).getName() +  "is first place in this round");
         System.out.println(this.drivers.get(1).getName() +  "is second place in this round");
         System.out.println(this.drivers.get(2).getName() +  "is third place in this round");
-        System.out.println(this.drivers.get(0).getName() +  "is forth place in this round");
+        System.out.println(this.drivers.get(3).getName() +  "is forth place in this round");
     }
     
     void rewardingDrivers(){
         Collections.sort(this.drivers, new AccumulatedTime(1));
-        
-        if(this.drivers.get(0).isEligibleToRace())
-            this.drivers.get(0).setAccumulatedPoints(this.drivers.get(0).getAccumulatedPoints() + FIRST_PLACE_REWARD);
-        if(this.drivers.get(1).isEligibleToRace())
-            this.drivers.get(1).setAccumulatedPoints(this.drivers.get(1).getAccumulatedPoints() + SECOND_PLACE_REWARD);
-        if(this.drivers.get(2).isEligibleToRace())
-            this.drivers.get(2).setAccumulatedPoints(this.drivers.get(2).getAccumulatedPoints() + THIRD_PLACE_REWARD);
-        if(this.drivers.get(3).isEligibleToRace())
-            this.drivers.get(3).setAccumulatedPoints(this.drivers.get(3).getAccumulatedPoints() + FOURTH_PLACE_REWARD);
-                
+        int reward = 8;
+        for(int i = 0; i < this.drivers.size(); i++){
+            if (this.drivers.get(i).isEligibleToRace())
+            {
+             this.drivers.get(i).setAccumulatedPoints(this.drivers.get(i).getAccumulatedPoints() + reward);
+             System.out.println(this.drivers.get(i).getName() +  " will get "+ reward + " points for lap");
+                switch (reward) {
+                    case 8:
+                        reward = 5;
+                        break;
+                    case 5:
+                        reward = 3;
+                        break;
+                    case 3:
+                        reward = 1;
+                        break;
+                    case 1:
+                        reward = 0;
+                        break;
+                    default:
+                        break;
+                }                     
+            }
+        }
     }
-    
      void printChampion(int numOfRaces){
-         
+         System.out.println("And after " + numOfRaces + "races" +  " \n CHAMPION IS " + this.drivers.get(0).getName() + " ,congratulations!!!! *_*)");
      }
 
     
